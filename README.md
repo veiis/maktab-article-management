@@ -1,4 +1,4 @@
-a simple article managment system and final project for maktab sharif.
+a simple article managment system and final project of maktab sharif.
 
 the server run on 3000.
 
