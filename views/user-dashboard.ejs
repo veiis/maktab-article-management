@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <%- include ./partials/require %>
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <%- include ./partials/header %>
+    <div class="container">
+        <% if(typeof(thisUserArticles) != 'undefined' && thisUser != '' && thisUser) { %>
+        <p>Hello <%= thisUser.firstName + ' ' + thisUser.lastName %></p>
+        <img src="/images/<%= thisUser.profilePic %>" width="100" height="100">
+
+        <% } %>
+        <button data-toggle="modal" data-target="#editModal" class="btn btn-primary">Edit your Profile</button>
+        <a href="/api/article/add" class="btn btn-primary">Add New Article</a>
+
+        <br><br>
+        <%- messages('./partials/message', locals) %>
+        <% if(typeof(thisUserArticles) != 'undefined' && thisUserArticles != '' && thisUserArticles) { %>
+        <div class="alert alert-info">Your Articles:</div>
+        <% thisUserArticles.forEach((tua) => { %>
+        <div id="user-articles" class="col-sm-6">
+            <img src="/images/<%= tua.picture %>" width="323" height="200">
+            <h2><%= tua.title %></h2>
+            <p><%= tua.content %></p>
+            <hr>
+            <a href="/api/article/show/<%= tua._id %>" class="btn btn-primary">Read more</a>
+            <a href="/api/article/edit/<%= tua._id %>" class="btn btn-primary">Edit</a>
+            <a href="/api/article/delete/<%= tua._id %>" class="btn btn-danger">Delete</a>
+        </div>
+        <% }); %>
+        <% } else { %>
+        <div id="user-articles" class="col-sm-6">
+            <div class="alert alert-danger">You have no article yet! :(</div>
+        </div>
+        <% } %>
+        <br>
+
+        <!-- Comments -->
+        <% if(typeof(thisUserComments) != 'undefined' && thisUserComments != '' && thisUserComments) { %>
+            <div class="alert alert-info">Your Comments:</div>
+            <% thisUserComments.forEach((tuc) => { %>
+                <% allArticles.forEach((aa) => { %>
+                    <% if(aa._id == tuc.article) { %>
+                        <div id="user-articles" class="col-sm-6">
+                                <h2>At <a href="/api/article/show/<%= aa._id %>"><%= aa.title %></a></h2>
+                                <p><%= tuc.content %></p>
+                                <hr>
+                                <a href="/api/article/show/<%= aa._id %>" class="btn btn-primary">Show</a>
+                                <a href="/api/comment/delete/<%= tuc._id %>" class="btn btn-danger">Delete</a>
+                            </div>
+                    <% } %>
+                <% }) %>
+            <% }) %>
+            <% } else { %>
+            <div id="user-articles" class="col-sm-6">
+                <div class="alert alert-danger">You have no comments yet! :(</div>
+            </div>
+            <% } %>
+            <br>
+        <!-- -->
+
+        <% if(typeof(otherUsersArticles) != 'undefined' && otherUsersArticles != '' && otherUsersArticles) { %>
+        <div class="alert alert-warning">Other User Articles:</div>
+        <% otherUsersArticles.forEach((oua) => { %>
+        <div id="other-articles" class="col-sm-6">
+            <img src="/images/<%= oua.picture %>" alt="" width="323" height="200">
+            <h2><%= oua.title %></h2>
+            <p><%= oua.content %></p>
+            <hr>
+            <p>Created at <%= oua.date %></p>
+            <a href="/api/article/show/<%= oua.id %>" class="btn btn-primary">Read More</a>
+        </div>
+        <% }); %>
+        <% } else { %>
+        <div id="other-articles" class="col-sm-6">
+            <div class="alert alert-danger">others have no article yet! :(</div>
+        </div>
+        <% } %>
+    </div>
+
+    <% if(typeof(thisUserArticles) != 'undefined' && thisUser != '' && thisUser) { %>
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit you information</h5>
+                </div>
+                <div class="modal-body">
+                    <form action="/api/user/edit/<%= thisUser._id %>" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">First name:</label>
+                            <input type="text" class="form-control" name="first_name" id="recipient-name"
+                                value="<%= thisUser.firstName %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Last name</label>
+                            <input type="text" class="form-control" name="last_name" id="recipient-name"
+                                value="<%= thisUser.lastName %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Phone</label>
+                            <input type="text" class="form-control" name="phone" id="recipient-name"
+                                value="<%= thisUser.phone %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Password</label>
+                            <input type="text" class="form-control" name="password" id="recipient-name"
+                                value="<%= thisUser.password %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Username</label>
+                            <input type="text" class="form-control" name="username" id="recipient-name"
+                                value="<%= thisUser.username %>">
+                        </div>
+                        <div class="form-group">
+                            <input type="radio" name="gender" value="male" checked>Male<br>
+                            <input type="radio" name="gender" value="female">Female<br>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Profile Picture</label>
+                            <input type="file" class="form-control" name="profile" id="recipient-name" required>
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save </button>
+                </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <% } %>
+
+    <%- include ./partials/footer %>
+</body>
+
+</html>

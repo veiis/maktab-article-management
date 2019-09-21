@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <%- include ./partials/require %>
+    <title>Home</title>
+</head>
+
+<body>
+    <%- include ./partials/header %>
+    <div class="container">
+        <% articles.forEach(article => { %>
+        <div id="article">
+            <img src="/images/<%= article.picture %>" width="300" height="200">
+            <h3><%= article.title %></h3>
+            <p><%= article.content %></p>
+            <a href="/api/article/show/<%= article._id %>">Read more.</a>
+        </div>
+        <% }); %>
+
+    </div>
+    <%- include ./partials/footer %>
+</body>
+
+</html>

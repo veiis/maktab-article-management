@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <%- include ./partials/require %>
+    <title>Edit Article</title>
+</head>
+
+<body>
+    <%- include ./partials/header %>
+    <div class="container">
+        <% if(typeof(deletedUserArticle) != 'undefined' && deletedUserArticle != '' && deletedUserArticle) { %>
+        <br>
+        <%- messages('./partials/message', locals) %>
+        <div class="btn btn-info">Edit Article with id: <strong><%= deletedUserArticle._id %></strong></div>
+        <form action="/api/admin/deleteduser/article/edit/<%= deletedUserArticle._id %>" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Title</label>
+                <input type="text" class="form-control" name="title" id="recipient-name" value="<%= deletedUserArticle.title %>">
+            </div>
+            <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Content</label>
+                <input type="text" class="form-control" name="content" id="recipient-name"
+                    value="<%= deletedUserArticle.content %>">
+            </div>
+            <div class="form-group">
+                <img src="/images/<%= deletedUserArticle.picture %>" width="50" height="50">
+                <label for="recipient-name" class="col-form-label">Picture</label>
+                <input type="file" class="form-control" name="picture" id="recipient-name" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+        <% } %>
+    </div>
+    <br>
+    <%- include ./partials/footer %>
+</body>
+
+</html>

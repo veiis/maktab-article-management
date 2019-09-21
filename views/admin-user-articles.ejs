@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <%- include ./partials/require %>
+    <title>User Articles</title>
+</head>
+
+<body>
+    <%- include ./partials/header %>
+    <div class="container">
+        <%- messages('./partials/message', locals) %>
+        <% if(typeof(articles) && articles != '' && articles) { %>
+            <div class="alert alert-info">User articles</div>
+        <% articles.forEach(article => { %>
+        <div id="article">
+            <img src="/images/<%= article.picture %>" width="300" height="200">
+            <h3><%= article.title %></h3>
+            <p><%= article.content %></p>
+            <a href="/api/article/show/<%= article._id %>" class="btn btn-info">Read more.</a>
+            <a href="/api/admin/user/article/edit/<%= article._id %>" class="btn btn-primary">Edit</a>
+            <a href="/api/admin/user/article/delete/<%= article._id %>" class="btn btn-danger">Delete</a>
+        </div>
+        <% }); %>
+        <% } else { %>
+        <div class="alert alert-danger">User have no articles</div>
+        <% } %>
+    </div>
+    <%- include ./partials/footer %>
+</body>
+
+</html>

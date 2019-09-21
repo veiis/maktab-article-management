@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <%- include ./partials/require %>
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <%- include ./partials/header %>
+    <div class="container">
+            <%- messages('./partials/message', locals) %>
+
+        <% if(typeof(users) != 'undefined' && users != '' && users) { %>
+        <button data-toggle="modal" data-target="#adminEditModal" class="btn btn-primary">Edit your Profile</button>
+        <br><br>
+        <% let counter = 0 %>
+        <table class="table table-striped table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">Row</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Profile</th>
+                    <th scope="col">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% users.forEach(user => { %>
+                <tr>
+                    <td><%= ++counter %></td>
+                    <td><%= user.firstName %></td>
+                    <td><%= user.lastName %></td>
+                    <td><%= user.username %></td>
+                    <td><%= user.phone %></td>
+                    <td><img src="/images/<%= user.profilePic %>" width="50" height="50"></td>
+                    <td>
+                        <a href="/api/admin/user/articles/<%= user._id %>" class="btn btn-info">Show Articles</a>
+                        <a href="/api/admin/user/<%= user._id %>" class="btn btn-primary">Edit</a>
+                        <a href="/api/admin/user/delete/<%= user._id %>" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+        <% } else { %>
+        <div class="alert alert-danger">There is no user!</div>
+        <% } %>
+        <% if(typeof(deletedUsersArticles) && deletedUsersArticles != '' && deletedUsersArticles) { %>
+        <div class="alert alert-info">Deleted Users Articles</div>
+        <% deletedUsersArticles.forEach(deletedUserArticle => { %>
+        <div id="article">
+            <img src="/images/<%= deletedUserArticle.picture %>" width="300" height="200">
+            <h3><%= deletedUserArticle.title %></h3>
+            <p><%= deletedUserArticle.content %></p>
+            <a href="/api/article/show/<%= deletedUserArticle._id %>" class="btn btn-info">Read more.</a>
+            <a href="/api//admin/deleteduser/article/edit/<%= deletedUserArticle._id %>"
+                class="btn btn-primary">Edit</a>
+            <a href="/api/admin/deleteduser/article/delete/<%= deletedUserArticle._id %>"
+                class="btn btn-danger">Delete</a>
+        </div>
+        <% }); %>
+        <% } else { %>
+        <div class="alert alert-danger">Deleted Users have no articles</div>
+        <% } %>
+    </div>
+
+    <%- include ./partials/footer %>
+</body>
+
+</html>

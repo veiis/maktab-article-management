@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <%- include ./partials/require %>
+
+    <title><%= article.title %></title>
+</head>
+
+<body>
+    <%- include ./partials/header %>
+    <% let counter = 0; %>
+    <div class="container">
+            <%- messages('./partials/message', locals) %>
+
+        <div id="article">
+            <img src="/images/<%= article.picture %>" width="700">
+            <h2><%= article.title %></h2>
+            <p><%= article.content %></p>
+            <hr>
+            <% if (typeof(currentUser) != 'undefined' && currentUser != '' && currentUser) { %>
+            <p>Created by <b><%= (currentUser.firstName || null ) +' '+ (currentUser.lastName || null)  %></b> at
+                <%= article.date %></p>
+            <% } else { %>
+            <p>Created by <b>Deleted User</b> at <%= article.date %></p>
+            <% } %>
+            <% if(typeof(currentUser) != 'undefined' && currentUser && typeof(user) != undefined && user != '' && user && user.id == currentUser._id) { %>
+            <a href="/api/article/edit/<%- article._id %>" class="btn btn-primary">Edit</a>
+            <a href="/api/article/delete/<%- article._id %>" class="btn btn-danger">Delete</a>
+            <% } %>
+        </div>
+
+        <div id="comment">
+            <% if(user) { %>
+            <form action="/api/comment/add" method="POST">
+                <div class="form-group">
+                    <label for="comment">Comment:</label>
+                    <textarea name="content" class="form-control" rows="5" id="comment"
+                        placeholder="Enter you comment."></textarea>
+                </div>
+                <input type="hidden" value="<%= article._id %>" name="article_id">
+                <input class="btn btn-primary" type="submit">
+            </form>
+            <% } else { %>
+            <div class="alert alert-danger">For send a comment please login first</div>
+            <% } %>
+            <br>
+            <% if (typeof(comments) != 'undefined' && comments != '' && comments) { %>
+            <% comments.forEach(comment => { %>
+                <% counter++ %>
+            <div class="comments">
+                <% if (typeof(commentUser) != 'undefined' && commentUser != '' && commentUser) { %>
+                <img src="/images/<%= commentUser.profilePic %>" width="50"
+                    height="50"><strong><%= commentUser.firstName %> Said:</strong>
+                <% if (typeof(user) != undefined && user != '' && user && user.id == commentUser._id)  { %>
+                <button onclick="toggle('editCm<%= counter %>')" class="btn btn-primary">Edit</button>
+                <a href="/api/comment/delete/<%- comment._id %>" class="btn btn-danger">Delete</a>
+                <% } %>
+                <div class="alert alert-info"> <%= comment.content %></div>
+                <div class="form-group" id="editCm<%= counter %>" style="display: none">
+                    <form action="/api/comment/edit/<%= comment._id %>" method="POST">
+                    <label for="recipient-name" class="col-form-label">Change Comment:</label>
+                    <textarea name="content" class="form-control" rows="5" id="comment"><%= comment.content %></textarea>
+                    <br>
+                    <input type="submit" placeholder="Save!" class="btn btn-success">
+                    </form>
+                </div>
+                <% } else { %>
+                <strong>Deleted User said: </strong>
+                <div class="alert alert-info"> <%= comment.content %></div>
+                <% } %>
+                <br>
+            </div>
+            <% }) %>
+            <% } else { %>
+            <div class="alert alert-danger">There is no comments for this article.</div>
+            <% } %>
+        </div>
+    </div>
+
+    <%- include ./partials/footer %>
+    <script>
+        function toggle(el) {
+            let elelment = document.getElementById(el);
+            console.log(elelment)
+            if (elelment.style.display == 'none') {
+                elelment.style.display = 'block';
+            } else {
+                elelment.style.display = 'none';
+            }
+        } </script>
+</body>
+
+</html>

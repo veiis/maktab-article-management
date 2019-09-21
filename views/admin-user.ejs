@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <%- include ./partials/require %>
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <%- include ./partials/header %>
+    <div class="container">
+        <% if(typeof(user) != 'undefined' && user != '' && user) { %>
+        <br>
+        <%- messages('./partials/message', locals) %>
+        <div class="btn btn-info">Edit user with id: <strong><%= user._id %></strong></div>
+        <form action="/api/admin/user/edit/<%= user._id %>" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="recipient-name" class="col-form-label">First name</label>
+                <input type="text" class="form-control" name="first_name" id="recipient-name"
+                    value="<%= user.firstName %>">
+            </div>
+            <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Last name</label>
+                <input type="text" class="form-control" name="last_name" id="recipient-name"
+                    value="<%= user.lastName %>">
+            </div>
+            <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Phone</label>
+                <input type="text" class="form-control" name="phone" id="recipient-name" value="<%= user.phone %>">
+            </div>
+            <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Password</label>
+                <input type="text" class="form-control" name="password" id="recipient-name"
+                    value="<%= user.password %>">
+            </div>
+            <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Username</label>
+                <input type="text" class="form-control" name="username" id="recipient-name"
+                    value="<%= user.username %>">
+            </div>
+            <div class="form-group">
+                <input type="radio" name="gender" value="male" checked>Male<br>
+                <input type="radio" name="gender" value="female">Female<br>
+            </div>
+            <div class="form-group">
+                <img src="/images/<%= user.profilePic %>" width="50" height="50">
+                <label for="recipient-name" class="col-form-label">Profile Picture</label>
+                <input type="file" class="form-control" name="profile" id="recipient-name" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+        <% } %>
+    </div>
+    <br>
+    <%- include ./partials/footer %>
+</body>
+
+</html>
